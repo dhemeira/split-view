@@ -1,3 +1,17 @@
+:root {
+  --background: #11111e;
+  --surface: #181827;
+  --surface-2: #1f1f33;
+  --border: #2d2d4c;
+  --border-focus: #4b4b7c;
+  --accent: #818cf8;
+  --accent-hover: color-mix(in oklch, var(--accent), black 10%);
+  --accent-soft: rgba(129, 140, 248, 0.14);
+  --text: #eef0fb;
+  --text-muted: color-mix(in oklch, var(--text), var(--background) 35%);
+  --font-sans: 'Plus Jakarta Sans Variable', sans-serif;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,9 +25,9 @@ body,
 }
 
 body {
-  font-family: -apple-system, system-ui, sans-serif;
-  background: #111;
-  color: #eee;
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--text);
   overflow: hidden;
 }
 
@@ -28,15 +42,15 @@ body {
   align-items: center;
   gap: 8px;
   padding: 5px 8px;
-  background: #17181a;
-  border-bottom: 1px solid #2a2b2e;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   flex: none;
 }
 
 .brand {
   font-size: 13px;
   font-weight: 600;
-  color: #eee;
+  color: var(--text);
   flex: none;
   letter-spacing: 0.02em;
 }
@@ -45,17 +59,22 @@ body {
   flex: 1;
   min-width: 0;
   height: 26px;
-  background: #1e1f22;
-  border: 1px solid #333;
-  color: #eee;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
   border-radius: 6px;
   padding: 0 10px;
   font-size: 12px;
+  font-family: inherit;
   outline: none;
 }
 
+.urlbar input::placeholder {
+  color: var(--text-muted);
+}
+
 .urlbar input:focus {
-  border-color: #818cf8;
+  border-color: var(--border-focus);
 }
 
 .urlbar button {
@@ -64,8 +83,8 @@ body {
   justify-content: center;
   width: 26px;
   height: 26px;
-  background: #818cf8;
-  color: #fff;
+  background: var(--accent);
+  color: var(--text);
   border: 0;
   border-radius: 6px;
   cursor: pointer;
@@ -73,12 +92,12 @@ body {
 }
 
 .urlbar button:hover {
-  background: #6c76f1;
+  background: var(--accent-hover);
 }
 
 .urlbar button:disabled {
-  background: #2a2b2e;
-  color: #666;
+  background: var(--surface-2);
+  color: var(--text-muted);
   cursor: default;
 }
 
@@ -95,8 +114,8 @@ body {
 
 .left {
   flex: none;
-  background: #17181a;
-  border-right: 1px solid #2a2b2e;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -107,7 +126,7 @@ body {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--surface-2);
 }
 
 .label {
@@ -115,15 +134,15 @@ body {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #bbb;
-  background: #17181a;
-  border-bottom: 1px solid #2a2b2e;
+  color: var(--text-muted);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   flex: none;
   line-height: 1.4;
 }
 
 .right .label {
-  background: #1e1e1e;
+  background: var(--surface-2);
 }
 
 .phone-area {
@@ -172,7 +191,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: #555;
+  color: var(--text-muted);
   font-size: 13px;
   text-align: center;
   padding: 24px;
@@ -180,10 +199,10 @@ body {
 
 .phone .empty {
   height: 100%;
-  background: #1c1c1e;
+  background: var(--surface-2);
 }
 
 .right .empty {
-  background: #1c1c1e;
-  color: #555;
+  background: var(--surface-2);
+  color: var(--text-muted);
 }
