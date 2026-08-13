@@ -12,6 +12,8 @@ A minimal responsive preview tool. Load any URL into a phone-sized view (430&tim
 
 ## Usage
 
+### Web (development)
+
 ```bash
 npm install
 npm run dev
@@ -19,15 +21,31 @@ npm run dev
 
 Open the printed local URL, paste a URL (e.g. `http://localhost:5173`), and press Enter. Both frames load the page.
 
-## Scripts
+### Desktop app (Tauri)
 
-| Command           | Description                  |
-| ----------------- | ---------------------------- |
-| `npm run dev`     | Start the Vite dev server    |
-| `npm run build`   | Typecheck + production build |
-| `npm run preview` | Preview the production build |
+```bash
+npm install
+npm run tauri dev     # run in a desktop window during development
+npm run tauri build   # produce the installer + standalone exe
+```
+
+Built artifacts land in `src-tauri/target/release/`:
+- `split-view.exe` — standalone executable (no server, no browser needed — uses the system WebView2/Chromium runtime)
+- `bundle/nsis/SplitView_<version>_x64-setup.exe` — Windows installer
 
 > Note: sites that block [X-Frame-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options) or CSP `frame-ancestors` won't render inside iframes.
+
+## Scripts
+
+| Command              | Description                     |
+| -------------------- | ------------------------------- |
+| `npm run dev`        | Start the Vite dev server       |
+| `npm run build`      | Typecheck + production build    |
+| `npm run preview`    | Preview the production build    |
+| `npm run tauri dev`  | Run the desktop app in dev mode |
+| `npm run tauri build`| Build the desktop app/installer |
+
+The desktop app loads the same frontend as the web build. The URL bar accepts any live localhost URL, so you can point it at whatever dev server you're working on.
 
 ## Project structure
 

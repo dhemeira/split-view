@@ -5,6 +5,8 @@ import { UrlBar } from './components/UrlBar';
 import { STORAGE_KEY } from './constants';
 import { normalizeUrl } from './lib/url';
 
+const isTauri = () => typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+
 export default function App() {
   const [input, setInput] = useState('');
   const [url, setUrl] = useState('');
@@ -30,14 +32,21 @@ export default function App() {
     if (url) setFrameKey((k) => k + 1);
   }, [url]);
 
+  const openDevtools = useCallback(() => {
+    if (!isTauri()) return;
+    import('@tauri-apps/api/core').then(({ invoke }) => invoke('open_devtools'));
+  }, []);
+
   return (
     <>
       <UrlBar
         value={input}
         canReload={Boolean(url)}
+        showDevtools={isTauri()}
         onChange={setInput}
         onSubmit={submit}
         onReload={reload}
+        onOpenDevtools={openDevtools}
       />
       <main className="content">
         <MobileView url={url} frameKey={frameKey} />

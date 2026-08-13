@@ -95,6 +95,16 @@ body {
   background: var(--accent-hover);
 }
 
+.urlbar button.ghost {
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.urlbar button.ghost:hover {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
 .urlbar button:disabled {
   background: var(--surface-2);
   color: var(--text-muted);
@@ -164,7 +174,6 @@ body {
     0 0 0 6px #000,
     0 12px 40px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  background: #fff;
   flex: none;
 }
 
