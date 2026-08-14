@@ -4,24 +4,45 @@ interface UrlBarProps {
   value: string;
   canReload: boolean;
   showDevtools: boolean;
+  history: string[];
   onChange: (value: string) => void;
   onSubmit: () => void;
   onReload: () => void;
   onOpenDevtools: () => void;
+  onSelectHistory: (url: string) => void;
 }
 
 export function UrlBar({
   value,
   canReload,
   showDevtools,
+  history,
   onChange,
   onSubmit,
   onReload,
   onOpenDevtools,
+  onSelectHistory,
 }: UrlBarProps) {
   return (
     <header className="urlbar">
       <span className="brand">SplitView</span>
+      {history.length > 0 && (
+        <select
+          className="history"
+          aria-label="Recent URLs"
+          value=""
+          onChange={(e) => e.target.value && onSelectHistory(e.target.value)}
+        >
+          <option value="" disabled>
+            History
+          </option>
+          {history.map((u) => (
+            <option key={u} value={u}>
+              {u}
+            </option>
+          ))}
+        </select>
+      )}
       <input
         type="text"
         value={value}

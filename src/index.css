@@ -105,6 +105,25 @@ body {
   color: var(--text);
 }
 
+.urlbar select.history {
+  flex: none;
+  max-width: 140px;
+  height: 26px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 0 24px 0 8px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.urlbar select.history:hover {
+  border-color: var(--border-focus);
+}
+
 .urlbar button:disabled {
   background: var(--surface-2);
   color: var(--text-muted);
