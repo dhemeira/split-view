@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
-import { DesktopView } from './components/DesktopView';
-import { MobileView } from './components/MobileView';
+import { Stage } from './components/Stage';
 import { UrlBar } from './components/UrlBar';
-import { STORAGE_KEY } from './constants';
+import { DEFAULT_VIEWS, STORAGE_KEY, VIEW_PRESETS, type View, type ViewPreset } from './constants';
 import { loadHistory, normalizeUrl, pushHistory } from './lib/url';
 
 const isTauri = () => typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+
+const uid = () => Math.random().toString(36).slice(2, 9);
 
 export default function App() {
   const [input, setInput] = useState('');
   const [url, setUrl] = useState('');
   const [frameKey, setFrameKey] = useState(0);
   const [history, setHistory] = useState<string[]>([]);
+  const [views, setViews] = useState<View[]>(DEFAULT_VIEWS);
+  const [scroll, setScroll] = useState({ pos: 0, ratio: 0 });
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -46,6 +49,31 @@ export default function App() {
     import('@tauri-apps/api/core').then(({ invoke }) => invoke('open_devtools'));
   }, []);
 
+  const addView = useCallback((preset: ViewPreset) => {
+    setViews((v) => [...v, { ...preset, id: uid(), inst: 0 }]);
+  }, []);
+
+  const moveView = useCallback((id: string, direction: -1 | 1) => {
+    setViews((v) => {
+      const i = v.findIndex((x) => x.id === id);
+      const j = i + direction;
+      if (i < 0 || j < 0 || j >= v.length) return v;
+      const next = v.map((x) =>
+        x.id === v[i].id || x.id === v[j].id ? { ...x, inst: (x.inst ?? 0) + 1 } : x,
+      );
+      [next[i], next[j]] = [next[j], next[i]];
+      return next;
+    });
+  }, []);
+
+  const removeView = useCallback((id: string) => {
+    setViews((v) => v.filter((x) => x.id !== id));
+  }, []);
+
+  const resizeView = useCallback((id: string, width: number, height: number) => {
+    setViews((v) => v.map((x) => (x.id === id ? { ...x, width, height } : x)));
+  }, []);
+
   return (
     <>
       <UrlBar
@@ -53,15 +81,25 @@ export default function App() {
         canReload={Boolean(url)}
         showDevtools={isTauri()}
         history={history}
+        presets={VIEW_PRESETS}
+        scroll={{ pos: scroll.pos, ratio: scroll.ratio }}
         onChange={setInput}
         onSubmit={submit}
         onReload={reload}
         onOpenDevtools={openDevtools}
         onSelectHistory={load}
+        onAddView={addView}
       />
-      <main className="content">
-        <MobileView url={url} frameKey={frameKey} />
-        <DesktopView url={url} frameKey={frameKey} />
+      <main className="stage-area">
+        <Stage
+          views={views}
+          url={url}
+          frameKey={frameKey}
+          onScroll={setScroll}
+          onMove={moveView}
+          onRemove={removeView}
+          onResize={resizeView}
+        />
       </main>
     </>
   );

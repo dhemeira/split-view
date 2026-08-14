@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { MAX_SCALE, MIN_SCALE } from '../constants';
+
+const MIN_SCALE = 0.02;
+const MAX_SCALE = 4;
 
 export function useFitScale<T extends HTMLElement>(
   targetHeight: number,
   padding = 0,
 ): { containerRef: React.RefObject<T | null>; scale: number } {
   const containerRef = useRef<T>(null);
-  const [scale, setScale] = useState(MAX_SCALE);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const el = containerRef.current;
