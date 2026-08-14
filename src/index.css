@@ -335,8 +335,8 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-top: 0;
-  border-bottom: 1px solid var(--border);
   overflow: hidden;
+  padding-bottom: 2px;
 }
 
 .fit-toggle {
@@ -362,7 +362,9 @@ body {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 999px;
-  transition: background 120ms ease, border-color 120ms ease;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease;
 }
 
 .fit-toggle .switch-track::before {
@@ -374,7 +376,9 @@ body {
   height: 12px;
   border-radius: 50%;
   background: var(--text-muted);
-  transition: transform 120ms ease, background 120ms ease;
+  transition:
+    transform 120ms ease,
+    background 120ms ease;
 }
 
 .fit-toggle input:checked + .switch-track {
@@ -573,3 +577,4 @@ body {
   color: var(--text-muted);
   font-size: 13px;
 }
+
