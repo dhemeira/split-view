@@ -1,6 +1,15 @@
 import { useRef } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import { MIN_VIEW_HEIGHT, MIN_VIEW_WIDTH, MAX_VIEW_WIDTH, type View } from '../constants';
+import {
+  MAX_ZOOM,
+  MIN_ZOOM,
+  MIN_VIEW_HEIGHT,
+  MIN_VIEW_WIDTH,
+  MAX_VIEW_WIDTH,
+  MIN_FRAME_WIDTH,
+  SCROLLBAR_GUTTER,
+  type View,
+} from '../constants';
 import { useFitScale } from '../hooks/useFitScale';
 import { EmptyState } from './EmptyState';
 
@@ -15,10 +24,13 @@ interface DeviceViewProps {
   onMoveRight: () => void;
   onRemove: () => void;
   onResize: (width: number, height: number) => void;
+  onUpdate: (patch: Partial<View>) => void;
 }
 
-const LABEL_HEIGHT = 34;
-const AREA_PADDING = 8;
+const LABEL_HEIGHT = 26;
+const TOOLS_HEIGHT = 22;
+const WRAP_PADDING = 8;
+const FIT_BORDER_ALLOWANCE = 2;
 
 type ResizeDir = 'w' | 'h' | 'both';
 
@@ -33,14 +45,26 @@ export function DeviceView({
   onMoveRight,
   onRemove,
   onResize,
+  onUpdate,
 }: DeviceViewProps) {
-  const { containerRef, scale } = useFitScale<HTMLDivElement>(view.height, LABEL_HEIGHT + AREA_PADDING * 2);
-  const displayScale = view.resizable ? 1 : scale;
+  const { containerRef, scale } = useFitScale<HTMLDivElement>(
+    view.height,
+    LABEL_HEIGHT + TOOLS_HEIGHT + WRAP_PADDING + FIT_BORDER_ALLOWANCE,
+  );
+  const { fit, zoom } = view;
+  const displayScale = fit
+    ? view.resizable
+      ? 1
+      : scale
+    : Math.max(zoom / 100, MIN_FRAME_WIDTH / view.width);
 
   const maxViewHeight = () => {
     const el = containerRef.current;
     if (!el) return 2000;
-    return Math.max(MIN_VIEW_HEIGHT, el.clientHeight - LABEL_HEIGHT - AREA_PADDING * 2);
+    return Math.max(
+      MIN_VIEW_HEIGHT,
+      el.clientHeight - LABEL_HEIGHT - TOOLS_HEIGHT - WRAP_PADDING - FIT_BORDER_ALLOWANCE,
+    );
   };
 
   const resizeRef = useRef<{
@@ -78,9 +102,10 @@ export function DeviceView({
   const instance = `${view.id}-${frameKey}-${view.inst ?? 0}`;
 
   const frameWidth = Math.round(view.width * displayScale) + 2;
+  const deviceWidth = frameWidth + SCROLLBAR_GUTTER * 2;
 
   return (
-    <div className="device" ref={containerRef} style={{ width: `${frameWidth}px` }}>
+    <div className="device" ref={containerRef} style={{ width: `${deviceWidth}px` }}>
       <div className="device-label" onPointerDown={onLabelDragStart}>
         <span className="device-name" title={view.label}>
           {view.label}
@@ -111,6 +136,29 @@ export function DeviceView({
             <XMarkIcon />
           </button>
         </span>
+      </div>
+      <div className="device-tools">
+        <label className="fit-toggle" title="Fit to screen height">
+          <input
+            type="checkbox"
+            checked={fit}
+            onChange={() => onUpdate({ fit: !fit })}
+            aria-label="Fit to height"
+          />
+          <span className="switch-track" />
+        </label>
+        <input
+          type="range"
+          className="zoom-slider"
+          min={MIN_ZOOM}
+          max={MAX_ZOOM}
+          step={10}
+          value={zoom}
+          disabled={fit}
+          onChange={(e) => onUpdate({ zoom: Number(e.target.value) })}
+          aria-label="Zoom level"
+        />
+        <span className="zoom-pct">{Math.round(displayScale * 100)}%</span>
       </div>
       <div className="frame-wrap">
         <div className="frame" style={{ width: view.width, height: view.height, zoom: displayScale }}>

@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 export interface DropdownOption {
   value: string;
   label: string;
+  onDelete?: (value: string) => void;
 }
 
 interface DropdownProps {
@@ -70,9 +71,22 @@ export function Dropdown({ label, options, ariaLabel, onSelect }: DropdownProps)
       </button>
       <div ref={menuRef} id={id} popover="auto" role="menu" className="dd-menu">
         {options.map((o) => (
-          <button key={o.value} type="button" role="menuitem" onClick={() => select(o.value)}>
-            {o.label}
-          </button>
+          <div key={o.value} className="dd-item">
+            <button type="button" role="menuitem" onClick={() => select(o.value)}>
+              {o.label}
+            </button>
+            {o.onDelete && (
+              <button
+                type="button"
+                className="dd-item-delete"
+                aria-label={`Delete ${o.label}`}
+                title="Remove from history"
+                onClick={() => o.onDelete?.(o.value)}
+              >
+                <XMarkIcon />
+              </button>
+            )}
+          </div>
         ))}
       </div>
     </div>

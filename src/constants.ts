@@ -6,6 +6,13 @@ export const MIN_VIEW_WIDTH = 220;
 export const MIN_VIEW_HEIGHT = 220;
 export const MAX_VIEW_WIDTH = 4000;
 
+export const MIN_ZOOM = 50;
+export const MAX_ZOOM = 150;
+export const DEFAULT_ZOOM = 100;
+
+export const MIN_FRAME_WIDTH = 250;
+export const SCROLLBAR_GUTTER = 8;
+
 export interface ViewPreset {
   label: string;
   width: number;
@@ -16,18 +23,20 @@ export interface ViewPreset {
 export interface View extends ViewPreset {
   id: string;
   inst?: number;
+  fit: boolean;
+  zoom: number;
 }
 
 export const VIEW_PRESETS: ViewPreset[] = [
-  { label: 'Phone SE', width: 375, height: 667 },
+  { label: 'iPhone 5', width: 320, height: 568 },
   { label: 'iPhone 15 Pro Max', width: 430, height: 932 },
-  { label: 'iPad', width: 768, height: 1024 },
+  { label: 'iPad Air 2020', width: 820, height: 1180 },
+  { label: 'Laptop', width: 1440, height: 900 },
   { label: 'Desktop HD', width: 1920, height: 1080 },
-  { label: 'Custom', width: 800, height: 600, resizable: true },
+  { label: 'Responsive', width: 500, height: 500, resizable: true },
 ];
 
 export const DEFAULT_VIEWS: View[] = [
-  { id: 'phone', label: 'iPhone 15 Pro Max', width: 430, height: 932 },
-  { id: 'desktop', label: 'Desktop HD', width: 1920, height: 1080 },
-  { id: 'custom', label: 'Custom', width: 800, height: 600, resizable: true },
+  { id: 'phone', label: 'iPhone 15 Pro Max', width: 430, height: 932, fit: true, zoom: DEFAULT_ZOOM },
+  { id: 'laptop', label: 'Laptop', width: 1440, height: 900, fit: true, zoom: DEFAULT_ZOOM },
 ];

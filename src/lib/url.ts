@@ -27,3 +27,13 @@ export function pushHistory(url: string): string[] {
   }
   return next;
 }
+
+export function deleteHistory(url: string): string[] {
+  const next = loadHistory().filter((u) => u !== url);
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(next));
+  } catch {
+    // ignore quota errors
+  }
+  return next;
+}

@@ -15,6 +15,7 @@ interface StageProps {
   onMove: (id: string, direction: -1 | 1) => void;
   onRemove: (id: string) => void;
   onResize: (id: string, width: number, height: number) => void;
+  onUpdate: (id: string, patch: Partial<View>) => void;
 }
 
 export function Stage({
@@ -25,6 +26,7 @@ export function Stage({
   onMove,
   onRemove,
   onResize,
+  onUpdate,
 }: StageProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{ startX: number; startScroll: number } | null>(null);
@@ -90,6 +92,7 @@ export function Stage({
           onMoveRight={() => onMove(view.id, 1)}
           onRemove={() => onRemove(view.id)}
           onResize={(w, h) => onResize(view.id, w, h)}
+          onUpdate={(patch) => onUpdate(view.id, patch)}
         />
       ))}
       {views.length === 0 && <div className="empty-stage">No views — add one from the menu</div>}

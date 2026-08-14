@@ -16,6 +16,7 @@ interface UrlBarProps {
   onOpenDevtools: () => void;
   onSelectHistory: (url: string) => void;
   onAddView: (preset: ViewPreset) => void;
+  onDeleteHistory: (url: string) => void;
 }
 
 export function UrlBar({
@@ -31,12 +32,17 @@ export function UrlBar({
   onOpenDevtools,
   onSelectHistory,
   onAddView,
+  onDeleteHistory,
 }: UrlBarProps) {
   const addOptions: DropdownOption[] = presets.map((p) => ({
     value: p.label,
     label: `${p.label} (${p.width}\u00d7${p.height})`,
   }));
-  const historyOptions: DropdownOption[] = history.map((u) => ({ value: u, label: u }));
+  const historyOptions: DropdownOption[] = history.map((u) => ({
+    value: u,
+    label: u,
+    onDelete: (value) => onDeleteHistory(value),
+  }));
 
   return (
     <header className="urlbar">

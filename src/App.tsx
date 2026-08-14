@@ -1,8 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Stage } from './components/Stage';
 import { UrlBar } from './components/UrlBar';
-import { DEFAULT_VIEWS, STORAGE_KEY, VIEW_PRESETS, type View, type ViewPreset } from './constants';
-import { loadHistory, normalizeUrl, pushHistory } from './lib/url';
+import {
+  DEFAULT_VIEWS,
+  DEFAULT_ZOOM,
+  STORAGE_KEY,
+  VIEW_PRESETS,
+  type View,
+  type ViewPreset,
+} from './constants';
+import { deleteHistory, loadHistory, normalizeUrl, pushHistory } from './lib/url';
 
 const isTauri = () => typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 
@@ -50,7 +57,11 @@ export default function App() {
   }, []);
 
   const addView = useCallback((preset: ViewPreset) => {
-    setViews((v) => [...v, { ...preset, id: uid(), inst: 0 }]);
+    setViews((v) => [...v, { ...preset, id: uid(), inst: 0, fit: true, zoom: DEFAULT_ZOOM }]);
+  }, []);
+
+  const updateView = useCallback((id: string, patch: Partial<View>) => {
+    setViews((v) => v.map((x) => (x.id === id ? { ...x, ...patch } : x)));
   }, []);
 
   const moveView = useCallback((id: string, direction: -1 | 1) => {
@@ -74,6 +85,10 @@ export default function App() {
     setViews((v) => v.map((x) => (x.id === id ? { ...x, width, height } : x)));
   }, []);
 
+  const removeHistory = useCallback((next: string) => {
+    setHistory(deleteHistory(next));
+  }, []);
+
   return (
     <>
       <UrlBar
@@ -89,6 +104,7 @@ export default function App() {
         onOpenDevtools={openDevtools}
         onSelectHistory={load}
         onAddView={addView}
+        onDeleteHistory={removeHistory}
       />
       <main className="stage-area">
         <Stage
@@ -99,6 +115,7 @@ export default function App() {
           onMove={moveView}
           onRemove={removeView}
           onResize={resizeView}
+          onUpdate={updateView}
         />
       </main>
     </>
