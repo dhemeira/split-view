@@ -48,7 +48,9 @@ export function Stage({
   }, [views.length]);
 
   const onLabelDragStart = (e: React.PointerEvent) => {
-    if ((e.target as HTMLElement).closest('button')) return;
+    const t = e.target as HTMLElement;
+    if (t.closest('button')) return;
+    if (t.closest('.fit-toggle') || t.closest('.zoom-slider')) return;
     const stage = stageRef.current;
     if (!stage) return;
     dragRef.current = { startX: e.clientX, startScroll: stage.scrollLeft };

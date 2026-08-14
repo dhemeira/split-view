@@ -337,6 +337,13 @@ body {
   border-top: 0;
   overflow: hidden;
   padding-bottom: 2px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.device-tools:active {
+  cursor: grabbing;
 }
 
 .fit-toggle {

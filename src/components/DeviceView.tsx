@@ -137,7 +137,7 @@ export function DeviceView({
           </button>
         </span>
       </div>
-      <div className="device-tools">
+      <div className="device-tools" onPointerDown={onLabelDragStart}>
         <label className="fit-toggle" title="Fit to screen height">
           <input
             type="checkbox"
